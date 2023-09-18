@@ -1,0 +1,14 @@
+- id: pydantic-to-schema
+  name: Pydantic Model to JSON Schema
+  description: Convert pydantic models to corresponding json schemas.
+  entry: pydantic-to-schema
+  language: python
+  "types_or": [python, pyi]
+  additional_dependencies: ["pydantic>=1.10.0"]
+- id: pydantic-to-json
+  name: Instanciated Pydantic Model to JSON
+  description: Convert any instanciated pydantic models to their corresponding json representation.
+  entry: pydantic-to-json
+  language: python
+  "types_or": [python, pyi]
+  additional_dependencies: ["pydantic>=1.10.0"]

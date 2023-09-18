@@ -1,0 +1,8 @@
+extend-select = [
+    'Q',  # flake8-quotes
+    'C90',  # mccabe
+    'UP',   # pyupgrade
+    'I',  # Isort
+    'T'  # flake8-
+]
+extend-ignore = ['E501', 'T20']
