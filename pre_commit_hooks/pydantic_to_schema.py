@@ -55,7 +55,7 @@ def export_models(path: str | Path, output_dir: str | Path) -> None:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    path.append(Path().absolute())
+    path.append(str(Path().absolute()))
     
     parser = ArgumentParser()
     parser.add_argument("filenames", nargs="*", help="Filenames to check.")
