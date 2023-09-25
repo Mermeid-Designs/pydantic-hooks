@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from importlib.util import module_from_spec, spec_from_file_location
 from inspect import getmembers, isclass
 from json import dump
+from os import sep
 from pathlib import Path
 from sys import version
 from typing import Sequence
@@ -29,7 +30,7 @@ def export_models(path: str | Path, output_dir: str | Path,
         )
 
     # Enable access to module or package information
-    spec = spec_from_file_location(path.stem, str(path.absolute()))
+    spec = spec_from_file_location(str(path.parent.joinpath(path.stem)).replace(sep, '.'), str(path.absolute()))
     module = module_from_spec(spec)
     spec.loader.exec_module(module)
 
