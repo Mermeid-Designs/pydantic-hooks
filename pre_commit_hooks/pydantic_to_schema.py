@@ -4,20 +4,20 @@ from inspect import getmembers, isclass
 from json import dump
 from os import sep
 from pathlib import Path
-from sys import version
+from sys import version_info, path
 from typing import Sequence
 
 from pydantic import BaseModel
-from pydantic import __version__ as pydantic_v
+from pydantic import __version__ as pydantic_version
 
 
-def export_models(path: str | Path, output_dir: str | Path,
-                  pydantic_version: tuple[int, int]) -> None:
+def export_models(path: str | Path, output_dir: str | Path) -> None:
     # Type cast `path` and `output_dir` to Path objects, if applicable
     #   Handles case where input is neither str nor Path (auto-fails check when error is thrown)
     path = Path(path) if not isinstance(path, Path) else path
     output_dir = Path(output_dir) if not isinstance(output_dir,
                                                     Path) else output_dir
+    print(f"Exporting {str(path)} model(s) to {output_dir}")
 
     # Ensure path points to an existing file or directory
     if not path.exists():
@@ -46,7 +46,7 @@ def export_models(path: str | Path, output_dir: str | Path,
                       encoding="utf-8") as file:
                 dump(
                     obj.model_json_schema()
-                    if pydantic_version >= (2, 0) else obj.schema_json(),
+                    if pydantic_version >= '2.0' else obj.schema_json(),
                     file,
                     indent=2,
                 )
@@ -88,11 +88,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.all:
         potential_files = source.glob("**/*.py")
     # Otherwise, only iterate through changed files within `source`
-    elif tuple(map(int,
-                   version.split(".", maxsplit=2)[:2])) < (
-                       3,
-                       9,
-                   ):  # Python version < 3.9
+    elif version_info < (3, 9):  # Python version < 3.9
         potential_files = [
             file for file in args.filenames
             if source in Path(file).absolute().parents
@@ -102,13 +98,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             file for file in args.filenames
             if Path(file).absolute().is_relative_to(source)
         ]
-
-    pydantic_version = tuple(map(int, pydantic_v.split(".")[:2]))
-
+      
     retval = 0
     for file in potential_files:
         try:
-            export_models(file, args.output, pydantic_version)
+            export_models(file, args.output)
         except Exception as e:
             print(f"{file}: Failed to export model ({e})")
             retval = 1
