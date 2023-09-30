@@ -6,6 +6,7 @@ from os import sep
 from pathlib import Path
 from sys import version_info, path
 from typing import Sequence
+from traceback import format_exc
 
 from pydantic import BaseModel
 from pydantic import __version__ as pydantic_version
@@ -106,7 +107,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         try:
             export_models(file, args.output)
         except Exception as e:
-            print(f"{file}: Failed to export model ({e})")
+            print(traceback.format_exc())
             retval = 1
     return retval
 
