@@ -107,7 +107,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         try:
             export_models(file, args.output)
         except Exception as e:
-            print(traceback.format_exc())
+            print(format_exc())
             retval = 1
     return retval
 
